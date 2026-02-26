@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { Map, MapMarker } from "react-kakao-maps-sdk";
 import logo from './assets/logo.png';
 import logo_white from './assets/logo-white.svg';
 
@@ -518,6 +519,20 @@ export default function Home() {
             </div>
           </FadeIn>
         </div>
+
+        <div className="w-full h-[350px] rounded-2xl overflow-hidden border border-bora-200">
+      <Map
+        center={{ lat: 37.5078, lng: 126.7219 }}
+        style={{ width: "100%", height: "100%" }}
+        level={3}
+      >
+        <MapMarker position={{ lat: 37.5078, lng: 126.7219 }}>
+          <div className="px-3 py-1.5 text-sm font-bold text-bora-600 whitespace-nowrap">
+            📍 이로움방문간호센터
+          </div>
+        </MapMarker>
+      </Map>
+    </div>
       </section>
 
       {/* FOOTER */}
