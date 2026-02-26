@@ -5,86 +5,6 @@ import { useKakaoMap } from "./hooks/useKakaoMap";
 import logo from "./assets/logo.png";
 import logo_white from "./assets/logo-white.svg";
 
-/* ── 키워드 강조 컴포넌트들 ───────────────────────────── */
-
-// 그라디언트 텍스트 (핵심 키워드)
-function Kw({ children }) {
-  return (
-    <span className="bg-linear-to-r from-bora-600 to-lavender bg-clip-text text-transparent font-bold">
-      {children}
-    </span>
-  );
-}
-
-// 뱃지 스타일 (자격·인증 키워드)
-function KwBadge({ children }) {
-  return (
-    <span className="inline-flex items-center gap-0.5 bg-bora-100 text-bora-600 font-bold px-1.5 py-0.5 rounded-md text-[0.95em] border border-bora-200 whitespace-nowrap">
-      {children}
-    </span>
-  );
-}
-
-// 박동 강조 (숫자·퍼센트)
-function KwPulse({ children }) {
-  return (
-    <span
-      className="font-black text-bora-600 inline-block"
-      style={{ animation: "kwPulse 2.5s ease-in-out infinite" }}
-    >
-      {children}
-    </span>
-  );
-}
-
-// 애니메이션 밑줄 (행동 유도 키워드)
-function KwLine({ children }) {
-  return (
-    <span className="relative font-bold text-bora-800 inline-block group">
-      {children}
-      <span
-        className="absolute bottom-0 left-0 w-full h-[2px] rounded-full"
-        style={{
-          background: "linear-gradient(90deg, #7c3aed, #a78bfa)",
-          animation: "kwSlide 1.8s ease-in-out infinite alternate",
-          transformOrigin: "left",
-        }}
-      />
-    </span>
-  );
-}
-
-// 글로우 텍스트 (매우 핵심 강조)
-function KwGlow({ children }) {
-  return (
-    <span
-      className="font-black text-bora-600 inline-block"
-      style={{
-        textShadow: "0 0 20px rgba(124, 58, 237, 0.35)",
-        animation: "kwGlow 3s ease-in-out infinite",
-      }}
-    >
-      {children}
-    </span>
-  );
-}
-
-/* 전역 키프레임 스타일 */
-const kwStyles = `
-  @keyframes kwPulse {
-    0%, 100% { transform: scale(1); color: #7c3aed; }
-    50% { transform: scale(1.06); color: #5b21b6; }
-  }
-  @keyframes kwSlide {
-    0% { transform: scaleX(0.5); opacity: 0.7; }
-    100% { transform: scaleX(1); opacity: 1; }
-  }
-  @keyframes kwGlow {
-    0%, 100% { text-shadow: 0 0 12px rgba(124,58,237,0.25); }
-    50% { text-shadow: 0 0 24px rgba(124,58,237,0.55), 0 0 40px rgba(167,139,250,0.2); }
-  }
-`;
-
 /* ── 데이터 ─────────────────────────────────────────── */
 const SERVICES = [
   {
@@ -299,9 +219,6 @@ export default function Home() {
 
   return (
     <div className="font-sans bg-bora-50 text-bora-900 min-h-screen">
-      {/* 키워드 강조 전역 스타일 */}
-      <style>{kwStyles}</style>
-
       {/* NAV */}
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -421,13 +338,12 @@ export default function Home() {
               </h1>
 
               <p className="text-bora-500 leading-relaxed mb-8 text-sm sm:text-[0.97rem]">
-                이로움방문간호센터는 <KwGlow>간호사</KwGlow>가{" "}
-                <KwLine>직접 운영</KwLine>하는
-                방문재가서비스(방문요양,방문간호)센터입니다. 어르신의 건강을
-                의료 전문가의 눈으로 세심하게 살펴드립니다. 아산병원 출신
-                의학박사의 '<KwBadge>방문재활 수련과정</KwBadge>'을 수료한
-                선생님들이 방문하여 집에서도 수준높은 재활 서비스를 받으실 수
-                있습니다.
+                이로움방문간호센터는{" "}
+                <strong className="text-bora-600">간호사</strong>가 직접
+                운영하는 방문재가서비스(방문요양,방문간호)센터입니다. 어르신의
+                건강을 의료 전문가의 눈으로 세심하게 살펴드립니다. 아산병원 출신
+                의학박사의 '방문재활 수련과정'을 수료한 선생님들이 방문하여
+                집에서도 수준높은 재활 서비스를 받으실 수 있습니다.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
@@ -435,7 +351,7 @@ export default function Home() {
                   onClick={() => scrollTo("contact")}
                   className="w-full bg-linear-to-r from-bora-600 to-bora-500 text-white font-bold px-7 py-3.5 rounded-xl shadow-bora hover:-translate-y-1 hover:shadow-bora-lg transition-all duration-200"
                 >
-                  <span className="text-white">무료 상담 신청하기 →</span>
+                  무료 상담 신청하기 →
                 </button>
                 <button
                   onClick={() => scrollTo("services")}
@@ -463,7 +379,7 @@ export default function Home() {
                 </span>
                 <div className="flex flex-col leading-tight">
                   <span className="text-xs font-bloc tracking-wide text-bora-600">
-                    <KwPulse>24시간</KwPulse> 상담 가능
+                    24시간 상담 가능
                   </span>
                   <span className="text-lg font-black tracking-wider text-bora-600">
                     070-4833-3569
@@ -486,8 +402,7 @@ export default function Home() {
                   방문간호센터
                 </div>
                 <div className="text-sm text-bora-500 mb-5">
-                  <KwBadge>국가면허 간호사</KwBadge>/간호조무사가{" "}
-                  <KwLine>직접</KwLine> 방문
+                  국가면허 간호사/간호조무사가 직접 방문
                 </div>
                 <div className="inline-flex items-center gap-2 bg-bora-600/10 rounded-xl px-4 py-2.5">
                   <span>🏥</span>
@@ -510,7 +425,8 @@ export default function Home() {
                 Why Eroum
               </p>
               <h2 className="text-3xl sm:text-4xl font-bold mb-3">
-                <KwGlow>간호사가 운영</KwGlow>하는 센터가 다른 이유
+                <span className="text-bora-600">간호사가 운영</span>하는 센터가
+                다른 이유
               </h2>
               <p className="text-bora-500 max-w-md mx-auto leading-relaxed text-sm">
                 단순한 요양 서비스를 넘어, 의료 전문성을
@@ -527,30 +443,10 @@ export default function Home() {
                 <div className="bg-bora-50 border border-bora-200 rounded-2xl p-6 hover:border-bora-400 hover:shadow-bora hover:-translate-y-1 transition-all duration-300">
                   <div className="text-3xl mb-4">{item.icon}</div>
                   <h3 className="font-bold text-base mb-2 text-bora-900">
-                    {i === 0 ? (
-                      <>
-                        <KwPulse>100%</KwPulse> <Kw>면허 간호사</Kw> 운영
-                      </>
-                    ) : i === 1 ? (
-                      <>개인 맞춤 간호 계획</>
-                    ) : i === 2 ? (
-                      <>
-                        의료기관 <KwLine>연계</KwLine> 시스템
-                      </>
-                    ) : (
-                      item.title
-                    )}
+                    {item.title}
                   </h3>
                   <p className="text-bora-500 text-sm leading-relaxed">
-                    {i === 0 ? (
-                      <>
-                        요양보호사가 아닌 <KwBadge>국가면허 간호사</KwBadge>가{" "}
-                        <strong className="text-bora-700">직접</strong>{" "}
-                        방문합니다.
-                      </>
-                    ) : (
-                      item.desc
-                    )}
+                    {item.desc}
                   </p>
                 </div>
               </FadeIn>
@@ -561,21 +457,10 @@ export default function Home() {
             <div className="mt-8 sm:mt-10 bg-linear-to-r from-bora-600 to-bora-500 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-bora-lg">
               <div>
                 <h3 className="font-bold text-white text-lg sm:text-xl mb-1">
-                  지금 바로{" "}
-                  <span
-                    style={{
-                      textDecoration: "underline",
-                      textDecorationColor: "rgba(255,255,255,0.6)",
-                      textUnderlineOffset: "3px",
-                    }}
-                  >
-                    무료
-                  </span>{" "}
-                  방문 상담을 받아보세요
+                  지금 바로 무료 방문 상담을 받아보세요
                 </h3>
                 <p className="text-white/75 text-sm">
-                  간호사가 <strong className="text-white">직접</strong> 방문하여
-                  어르신 건강 상태를 평가해드립니다.
+                  간호사가 직접 방문하여 어르신 건강 상태를 평가해드립니다.
                 </p>
               </div>
               <button
@@ -604,8 +489,8 @@ export default function Home() {
                 제공 서비스
               </h2>
               <p className="text-bora-500 text-sm leading-relaxed">
-                어르신 한 분 한 분의 건강 상태에 맞게 필요한 간호 서비스를{" "}
-                <KwLine>맞춤 제공</KwLine>합니다.
+                어르신 한 분 한 분의 건강 상태에 맞게 필요한 간호 서비스를 맞춤
+                제공합니다.
               </p>
             </div>
           </FadeIn>
@@ -617,43 +502,10 @@ export default function Home() {
                     {s.icon}
                   </div>
                   <h3 className="font-bold text-base mb-2 text-bora-900">
-                    {i === 4 ? (
-                      <>
-                        <KwBadge>1:1 맞춤</KwBadge> 방문재활
-                      </>
-                    ) : (
-                      s.title
-                    )}
+                    {s.title}
                   </h3>
                   <p className="text-bora-500 text-sm leading-relaxed">
-                    {i === 0 ? (
-                      <>
-                        욕창, 상처 드레싱, 콧줄, 소변줄 관리 등 가정에서 필요한
-                        전문 간호 처치를 <KwBadge>면허 간호사</KwBadge>가{" "}
-                        <strong className="text-bora-700">직접</strong>{" "}
-                        제공합니다.
-                      </>
-                    ) : i === 3 ? (
-                      <>
-                        치매·인지 저하 어르신을 위한 전문적인 인지 자극
-                        프로그램을 <KwBadge>간호사</KwBadge>가 직접
-                        설계·운영합니다.
-                      </>
-                    ) : i === 4 ? (
-                      <>
-                        뇌졸증, 파킨슨, 수술 후 가정에서 맞춤 재활을 밀착
-                        지원하여 재입원을 예방합니다.
-                      </>
-                    ) : i === 5 ? (
-                      <>
-                        보호자가 가정에서 올바른 돌봄을 실천할 수 있도록{" "}
-                        <KwBadge>간호사</KwBadge>가{" "}
-                        <strong className="text-bora-700">직접</strong> 교육하고
-                        상담합니다.
-                      </>
-                    ) : (
-                      s.desc
-                    )}
+                    {s.desc}
                   </p>
                 </div>
               </FadeIn>
@@ -692,25 +544,10 @@ export default function Home() {
                     </div>
                     <div className="flex-1 bg-bora-50 border border-bora-200 rounded-2xl px-5 sm:px-6 py-4 sm:py-5">
                       <h4 className="font-bold text-base mb-1 text-bora-900">
-                        {i === 0 ? (
-                          <>무료 상담 신청</>
-                        ) : i === 1 ? (
-                          <>
-                            간호사 <KwLine>직접</KwLine> 방문 상담
-                          </>
-                        ) : (
-                          step.title
-                        )}
+                        {step.title}
                       </h4>
                       <p className="text-bora-500 text-sm leading-relaxed">
-                        {i === 1 ? (
-                          <>
-                            <KwBadge>면허 간호사</KwBadge>가 직접 방문하여
-                            어르신 건강 상태를 전문적으로 평가합니다.
-                          </>
-                        ) : (
-                          step.desc
-                        )}
+                        {step.desc}
                       </p>
                     </div>
                   </div>
@@ -797,9 +634,8 @@ export default function Home() {
                   장기요양등급이 없으셔도 괜찮습니다.
                   <br />
                 </strong>
-                등급 신청부터 서비스 시작까지{" "}
-                <KwLine>모든 과정을 도와드립니다</KwLine>. 정확한 본인부담금은
-                상담을 통해 안내드립니다.
+                등급 신청부터 서비스 시작까지 모든 과정을 도와드립니다. 정확한
+                본인부담금은 상담을 통해 안내드립니다.
               </p>
             </div>
           </FadeIn>
@@ -818,9 +654,7 @@ export default function Home() {
                 무료 상담 신청
               </h2>
               <p className="text-bora-500 text-sm">
-                남겨주신 연락처로 <KwPulse>24시간</KwPulse> 내에{" "}
-                <KwBadge>담당 간호사</KwBadge>가{" "}
-                <strong className="text-bora-700">직접</strong> 연락드립니다.
+                남겨주신 연락처로 24시간 내에 담당 간호사가 직접 연락드립니다.
               </p>
             </div>
           </FadeIn>
