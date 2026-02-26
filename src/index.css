@@ -1,53 +1,75 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
   /* ── Bora 컬러 팔레트 ── */
-  --color-bora-50:  #FAF8FF;
-  --color-bora-100: #F3EEFF;
-  --color-bora-200: #E8DCFC;
-  --color-bora-300: #D5BCF7;
-  --color-bora-400: #B794F0;
-  --color-bora-500: #9B7EC8;
-  --color-bora-600: #7B5EA7;
-  --color-bora-700: #5C4180;
-  --color-bora-800: #3E2A5A;
-  --color-bora-900: #1E1528;
+  --color-bora-50: #faf8ff;
+  --color-bora-100: #f3eeff;
+  --color-bora-200: #e8dcfc;
+  --color-bora-300: #d5bcf7;
+  --color-bora-400: #b794f0;
+  --color-bora-500: #9b7ec8;
+  --color-bora-600: #7b5ea7;
+  --color-bora-700: #5c4180;
+  --color-bora-800: #3e2a5a;
+  --color-bora-900: #1e1528;
 
-  --color-accent:   #E879A0;
-  --color-lavender: #C084FC;
+  --color-accent: #e879a0;
+  --color-lavender: #c084fc;
 
   /* ── 폰트 ── */
   --font-serif: 'Noto Serif KR', serif;
-  --font-sans:  'Noto Sans KR', sans-serif;
+  --font-sans: 'Noto Sans KR', sans-serif;
 
   /* ── 커스텀 그림자 ── */
-  --shadow-bora:    0 8px 32px rgba(123, 94, 167, 0.25);
+  --shadow-bora: 0 8px 32px rgba(123, 94, 167, 0.25);
   --shadow-bora-lg: 0 16px 56px rgba(123, 94, 167, 0.32);
 
   /* ── 커스텀 애니메이션 ── */
-  --animate-float:     float 5s ease-in-out infinite;
+  --animate-float: float 5s ease-in-out infinite;
   --animate-pulse-dot: pulseDot 2s ease-in-out infinite;
 }
 
 /* ── 키프레임 ── */
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-12px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
 }
 
 @keyframes pulseDot {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(123, 94, 167, 0.4); }
-  50%       { box-shadow: 0 0 0 8px rgba(123, 94, 167, 0); }
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(123, 94, 167, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(123, 94, 167, 0);
+  }
 }
 
 @keyframes ring {
-  0%   { transform: rotate(0deg); }
-  20%  { transform: rotate(-20deg); }
-  40%  { transform: rotate(20deg); }
-  60%  { transform: rotate(-15deg); }
-  80%  { transform: rotate(10deg); }
-  100% { transform: rotate(0deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  20% {
+    transform: rotate(-20deg);
+  }
+  40% {
+    transform: rotate(20deg);
+  }
+  60% {
+    transform: rotate(-15deg);
+  }
+  80% {
+    transform: rotate(10deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
 }
 
 /* ── 글로벌 스타일 ── */
@@ -60,7 +82,7 @@ html {
   width: 5px;
 }
 ::-webkit-scrollbar-thumb {
-  background: #9B7EC8;
+  background: #9b7ec8;
   border-radius: 4px;
 }
 
@@ -68,11 +90,14 @@ input:focus,
 textarea:focus,
 select:focus {
   outline: none;
-  border-color: #7B5EA7 !important;
+  border-color: #7b5ea7 !important;
   box-shadow: 0 0 0 3px rgba(123, 94, 167, 0.15);
 }
 
-h1, h2, h3, h4, p {
+h1,
+h2,
+h3,
+h4,
+p {
   word-break: keep-all;
 }
-
