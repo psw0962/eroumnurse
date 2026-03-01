@@ -25,12 +25,24 @@ function KwBadge({ children }) {
   );
 }
 
-// 박동 강조 (숫자·퍼센트)
+// 박동 강조 (숫자·퍼센트) — 밝은 배경용 (기본)
 function KwPulse({ children }) {
   return (
     <span
       className="font-black text-bora-600 inline-block"
       style={{ animation: "kwPulse 2.5s ease-in-out infinite" }}
+    >
+      {children}
+    </span>
+  );
+}
+
+// 박동 강조 — 어두운 배경용 (scale + 흰색 glow)
+function KwPulseOnDark({ children }) {
+  return (
+    <span
+      className="font-black text-white inline-block"
+      style={{ animation: "kwPulseWhite 2.5s ease-in-out infinite" }}
     >
       {children}
     </span>
@@ -75,6 +87,10 @@ const kwStyles = `
     0%, 100% { transform: scale(1); color: #7c3aed; }
     50% { transform: scale(1.06); color: #5b21b6; }
   }
+  @keyframes kwPulseWhite {
+    0%, 100% { transform: scale(1); opacity: 1; text-shadow: 0 0 8px rgba(255,255,255,0.4); }
+    50% { transform: scale(1.08); opacity: 1; text-shadow: 0 0 18px rgba(255,255,255,0.9), 0 0 30px rgba(255,255,255,0.4); }
+  }
   @keyframes kwSlide {
     0% { transform: scaleX(0.5); opacity: 0.7; }
     100% { transform: scaleX(1); opacity: 1; }
@@ -82,6 +98,13 @@ const kwStyles = `
   @keyframes kwGlow {
     0%, 100% { text-shadow: 0 0 12px rgba(124,58,237,0.25); }
     50% { text-shadow: 0 0 24px rgba(124,58,237,0.55), 0 0 40px rgba(167,139,250,0.2); }
+  }
+  @keyframes ring {
+    0%, 100% { transform: rotate(0deg); }
+    20% { transform: rotate(-15deg); }
+    40% { transform: rotate(15deg); }
+    60% { transform: rotate(-10deg); }
+    80% { transform: rotate(10deg); }
   }
 `;
 
@@ -183,7 +206,7 @@ const STEPS = [
   {
     num: "01",
     title: "무료 상담 신청",
-    desc: "전화 또는 온라인으로 간단히 신청해 주세요.",
+    desc: "전화 상담을 통해 간편하게 신청해 주세요.",
   },
   {
     num: "02",
@@ -205,16 +228,6 @@ const STEPS = [
     title: "방문 간호 시작",
     desc: "정해진 일정에 따라 전문 방문 간호 서비스를 시작합니다.",
   },
-];
-
-const GRADES = [
-  "1등급",
-  "2등급",
-  "3등급",
-  "4등급",
-  "5등급",
-  "인지지원등급",
-  "등급 없음 / 미신청",
 ];
 
 function useFadeIn(threshold = 0.12) {
@@ -249,18 +262,40 @@ function FadeIn({ children, delay = 0 }) {
   );
 }
 
+/* ── 전화 버튼 공통 컴포넌트 ───────────────────────────── */
+function PhoneButton({ ringing, setRinging }) {
+  return (
+    <a
+      href="tel:07048333569"
+      onMouseEnter={() => setRinging(true)}
+      onMouseLeave={() => setRinging(false)}
+      className="inline-flex items-center justify-center gap-3 bg-bora-700 font-bold w-full px-3 py-2 rounded-2xl shadow-bora hover:shadow-bora-lg hover:-translate-y-1 transition-all duration-200 group"
+    >
+      <span
+        className="text-2xl inline-block"
+        style={{
+          animation: ringing ? "ring 0.5s ease-in-out infinite" : "none",
+        }}
+      >
+        📞
+      </span>
+      <div className="flex flex-col leading-tight">
+        <span className="text-xs font-bloc tracking-wide text-white/70">
+          <KwPulseOnDark>24시간</KwPulseOnDark> 상담 가능
+        </span>
+        <span className="text-lg font-black tracking-wider text-white">
+          070-4833-3569
+        </span>
+      </div>
+    </a>
+  );
+}
+
 export default function Home() {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
   const [activeNav, setActiveNav] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
-  const [form, setForm] = useState({
-    name: "",
-    phone: "",
-    grade: "",
-    message: "",
-  });
-  const [submitted, setSubmitted] = useState(false);
   const [ringing, setRinging] = useState(false);
   const mapReady = useKakaoMap();
 
@@ -294,12 +329,9 @@ export default function Home() {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     setMenuOpen(false);
   };
-  const setField = (k) => (e) =>
-    setForm((f) => ({ ...f, [k]: e.target.value }));
 
   return (
     <div className="font-sans bg-bora-50 text-bora-900 min-h-screen">
-      {/* 키워드 강조 전역 스타일 */}
       <style>{kwStyles}</style>
 
       {/* NAV */}
@@ -348,12 +380,14 @@ export default function Home() {
                 {label}
               </button>
             ))}
-            <button
-              onClick={() => scrollTo("contact")}
+            <a
+              href="tel:07048333569"
+              onMouseEnter={() => setRinging(true)}
+              onMouseLeave={() => setRinging(false)}
               className="bg-linear-to-r from-bora-600 to-bora-500 text-white text-sm font-semibold px-4 py-2 rounded-xl shadow-bora hover:-translate-y-0.5 hover:shadow-bora-lg transition-all duration-200"
             >
               무료 상담 신청
-            </button>
+            </a>
           </div>
 
           {/* 햄버거 버튼 */}
@@ -393,12 +427,14 @@ export default function Home() {
                 {label}
               </button>
             ))}
-            <button
-              onClick={() => scrollTo("contact")}
+            <a
+              href="tel:07048333569"
+              onMouseEnter={() => setRinging(true)}
+              onMouseLeave={() => setRinging(false)}
               className="mt-2 bg-linear-to-r from-bora-600 to-bora-500 text-white font-bold px-4 py-3 rounded-xl shadow-bora text-center"
             >
               무료 상담 신청
-            </button>
+            </a>
           </div>
         </div>
       </nav>
@@ -425,51 +461,21 @@ export default function Home() {
                 <KwLine>직접 운영</KwLine>하는
                 방문재가서비스(방문요양,방문간호)센터입니다. 어르신의 건강을
                 의료 전문가의 눈으로 세심하게 살펴드립니다. 아산병원 출신
-                의학박사의 '<KwBadge>방문재활 수련과정</KwBadge>'을 수료한
+                의학박사의 <KwBadge>방문재활 수련과정</KwBadge>을 수료한
                 선생님들이 방문하여 집에서도 수준높은 재활 서비스를 받으실 수
                 있습니다.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
-                <button
-                  onClick={() => scrollTo("contact")}
-                  className="w-full bg-linear-to-r from-bora-600 to-bora-500 text-white font-bold px-7 py-3.5 rounded-xl shadow-bora hover:-translate-y-1 hover:shadow-bora-lg transition-all duration-200"
-                >
-                  <span className="text-white">무료 상담 신청하기 →</span>
-                </button>
+                <PhoneButton ringing={ringing} setRinging={setRinging} />
+
                 <button
                   onClick={() => scrollTo("services")}
-                  className="w-full border-2 border-bora-600 text-bora-600 font-bold px-7 py-3.5 rounded-xl hover:bg-bora-100 hover:-translate-y-0.5 transition-all duration-200"
+                  className="w-full px-3 py-3 border-2 border-bora-600 text-bora-600 font-bold rounded-xl hover:bg-bora-100 hover:-translate-y-0.5 transition-all duration-200"
                 >
                   서비스 보기
                 </button>
               </div>
-
-              <a
-                href="tel:07048333569"
-                onMouseEnter={() => setRinging(true)}
-                onMouseLeave={() => setRinging(false)}
-                className="inline-flex items-center justify-center gap-3 from-bora-600 to-bora-500 font-bold w-full px-6 py-4 mt-4 rounded-2xl shadow-bora hover:shadow-bora-lg hover:-translate-y-1 transition-all duration-200 group"
-              >
-                <span
-                  className="text-2xl inline-block"
-                  style={{
-                    animation: ringing
-                      ? "ring 0.5s ease-in-out infinite"
-                      : "none",
-                  }}
-                >
-                  📞
-                </span>
-                <div className="flex flex-col leading-tight">
-                  <span className="text-xs font-bloc tracking-wide text-bora-600">
-                    <KwPulse>24시간</KwPulse> 상담 가능
-                  </span>
-                  <span className="text-lg font-black tracking-wider text-bora-600">
-                    070-4833-3569
-                  </span>
-                </div>
-              </a>
             </div>
 
             <div className="animate-float order-1 md:order-2">
@@ -578,12 +584,15 @@ export default function Home() {
                   어르신 건강 상태를 평가해드립니다.
                 </p>
               </div>
-              <button
-                onClick={() => scrollTo("contact")}
+
+              <a
+                href="tel:07048333569"
+                onMouseEnter={() => setRinging(true)}
+                onMouseLeave={() => setRinging(false)}
                 className="bg-white text-bora-600 font-bold px-6 py-3 rounded-xl hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 shrink-0 w-full sm:w-auto text-center"
               >
                 상담 신청하기 →
-              </button>
+              </a>
             </div>
           </FadeIn>
         </div>
@@ -775,20 +784,26 @@ export default function Home() {
                       </li>
                     ))}
                   </ul>
-                  <button
-                    onClick={() => scrollTo("contact")}
-                    className={`w-full py-3.5 rounded-xl font-bold text-sm transition-all duration-200 ${
-                      plan.highlight
-                        ? "bg-white text-bora-600 hover:bg-bora-50 hover:shadow-lg"
-                        : "bg-linear-to-r from-bora-600 to-bora-500 text-white hover:shadow-bora hover:-translate-y-0.5"
-                    }`}
+                  <a
+                    href="tel:07048333569"
+                    onMouseEnter={() => setRinging(true)}
+                    onMouseLeave={() => setRinging(false)}
                   >
-                    상담 신청하기
-                  </button>
+                    <button
+                      className={`w-full py-3.5 rounded-xl font-bold text-sm transition-all duration-200 ${
+                        plan.highlight
+                          ? "bg-white text-bora-600 hover:bg-bora-50 hover:shadow-lg"
+                          : "bg-linear-to-r from-bora-600 to-bora-500 text-white hover:shadow-bora hover:-translate-y-0.5"
+                      }`}
+                    >
+                      상담 신청하기
+                    </button>
+                  </a>
                 </div>
               </FadeIn>
             ))}
           </div>
+
           <FadeIn delay={0.2}>
             <div className="mt-6 sm:mt-8 bg-white border border-bora-200 rounded-2xl p-5 sm:p-6 flex gap-1 items-center">
               <span className="text-xl mt-0.5 shrink-0">💡</span>
@@ -812,161 +827,71 @@ export default function Home() {
           <FadeIn>
             <div className="text-center mb-10 sm:mb-12">
               <p className="text-xs font-bold text-bora-600 tracking-[0.15em] mb-2 uppercase">
-                Contact
+                Location
               </p>
-              <h2 className="text-3xl sm:text-4xl font-bold mb-3 text-bora-900">
-                무료 상담 신청
+              <h2 className="text-3xl sm:text-4xl font-bold mb-5 text-bora-900">
+                오시는 길
               </h2>
-              <p className="text-bora-500 text-sm">
-                남겨주신 연락처로 <KwPulse>24시간</KwPulse> 내에{" "}
-                <KwBadge>담당 간호사</KwBadge>가{" "}
-                <strong className="text-bora-700">직접</strong> 연락드립니다.
-              </p>
-            </div>
-          </FadeIn>
 
-          {submitted ? (
-            <FadeIn>
-              <div className="bg-bora-100 border-2 border-bora-200 rounded-3xl p-12 sm:p-16 text-center">
-                <div className="text-6xl mb-4">💜</div>
-                <h3 className="text-2xl font-bold text-bora-600 mb-2">
-                  상담 신청이 완료되었습니다!
-                </h3>
-                <p className="text-bora-500 leading-relaxed text-sm">
-                  담당 간호사가 직접 연락드릴 예정입니다.
-                  <br />
-                  빠른 시일 내에 연락드리겠습니다.
-                </p>
-              </div>
-            </FadeIn>
-          ) : (
-            <FadeIn>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  setSubmitted(true);
-                }}
-                className="bg-bora-50 border border-bora-200 rounded-3xl p-6 sm:p-8 space-y-5"
-              >
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-semibold mb-1.5 text-bora-900">
-                      성함 *
-                    </label>
-                    <input
-                      required
-                      value={form.name}
-                      onChange={setField("name")}
-                      placeholder="홍길동"
-                      className="w-full px-4 py-3 border border-bora-200 rounded-xl text-sm bg-white text-bora-900 placeholder-bora-300 transition-all duration-200"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold mb-1.5 text-bora-900">
-                      연락처 *
-                    </label>
-                    <input
-                      required
-                      value={form.phone}
-                      onChange={setField("phone")}
-                      placeholder="010-0000-0000"
-                      className="w-full px-4 py-3 border border-bora-200 rounded-xl text-sm bg-white text-bora-900 placeholder-bora-300 transition-all duration-200"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold mb-1.5 text-bora-900">
-                    장기요양 등급
-                  </label>
-                  <select
-                    value={form.grade}
-                    onChange={setField("grade")}
-                    className="w-full px-4 py-3 border border-bora-200 rounded-xl text-sm bg-white text-bora-900 transition-all duration-200"
-                  >
-                    <option value="">선택해주세요</option>
-                    {GRADES.map((g) => (
-                      <option key={g}>{g}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold mb-1.5 text-bora-900">
-                    문의 내용
-                  </label>
-                  <textarea
-                    value={form.message}
-                    onChange={setField("message")}
-                    rows={4}
-                    placeholder="어르신의 건강 상태나 필요한 서비스에 대해 자유롭게 적어주세요."
-                    className="w-full px-4 py-3 border border-bora-200 rounded-xl text-sm bg-white text-bora-900 placeholder-bora-300 resize-y transition-all duration-200"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="w-full bg-linear-to-r from-bora-600 to-bora-500 text-white font-bold py-4 rounded-xl shadow-bora hover:-translate-y-0.5 hover:shadow-bora-lg transition-all duration-200"
-                >
-                  상담 신청하기 →
-                </button>
-                <p className="text-center text-xs text-bora-400">
-                  입력하신 개인정보는 상담 목적으로만 사용됩니다.
-                </p>
-              </form>
-            </FadeIn>
-          )}
+              <FadeIn delay={0.1}>
+                <PhoneButton ringing={ringing} setRinging={setRinging} />
 
-          <FadeIn delay={0.1}>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5">
-              {[
-                ["📞", "전화 상담", "070-4833-3569", "24시간 상담 가능"],
-                [
-                  "📍",
-                  "센터 위치",
-                  "인천광역시 부평구",
-                  "경인로903, 3층(부평동)",
-                ],
-                ["🚨", "긴급 연락", "24시간 운영", "응급 상황 즉시 대응"],
-              ].map(([icon, title, l1, l2]) => (
-                <div
-                  key={title}
-                  className="bg-bora-50 border border-bora-200 rounded-2xl p-4 text-center"
-                >
-                  <div className="text-2xl mb-1">{icon}</div>
-                  <div className="text-[0.68rem] text-bora-400 mb-0.5">
-                    {title}
-                  </div>
-                  <div className="font-bold text-bora-600 text-sm">{l1}</div>
-                  <div className="text-[0.68rem] text-bora-400 mt-0.5">
-                    {l2}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </FadeIn>
-
-          <FadeIn delay={0.15}>
-            <div
-              className="mt-5 rounded-2xl overflow-hidden border border-bora-200"
-              style={{ height: "350px" }}
-            >
-              {mapReady ? (
-                <Map
-                  center={{ lat: 37.4865108655489, lng: 126.720344219984 }}
-                  style={{ width: "100%", height: "100%" }}
-                  level={3}
-                >
-                  <MapMarker
-                    position={{ lat: 37.4865108655489, lng: 126.720344219984 }}
-                  >
-                    <div className="px-3 py-1.5 text-sm font-bold text-bora-600 whitespace-nowrap">
-                      📍 이로움방문간호센터
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-5">
+                  {[
+                    [
+                      "📍",
+                      "센터 위치",
+                      "인천광역시 부평구",
+                      "경인로903, 3층(부평동)",
+                    ],
+                    ["🚨", "긴급 연락", "24시간 운영", "응급 상황 즉시 대응"],
+                  ].map(([icon, title, l1, l2]) => (
+                    <div
+                      key={title}
+                      className="bg-bora-50 border border-bora-200 rounded-2xl p-4 text-center"
+                    >
+                      <div className="text-2xl mb-1">{icon}</div>
+                      <div className="text-sm text-bora-400 mb-0.5">
+                        {title}
+                      </div>
+                      <div className="font-bold text-bora-600 text-sm">
+                        {l1}
+                      </div>
+                      <div className="text-sm text-bora-400 mt-0.5">{l2}</div>
                     </div>
-                  </MapMarker>
-                </Map>
-              ) : (
-                <div className="w-full h-full flex items-center justify-center bg-bora-50 text-bora-400 text-sm">
-                  지도 불러오는 중...
+                  ))}
                 </div>
-              )}
+              </FadeIn>
+
+              <FadeIn delay={0.15}>
+                <div
+                  className="mt-5 rounded-2xl overflow-hidden border border-bora-200"
+                  style={{ height: "350px" }}
+                >
+                  {mapReady ? (
+                    <Map
+                      center={{ lat: 37.4865108655489, lng: 126.720344219984 }}
+                      style={{ width: "100%", height: "100%" }}
+                      level={3}
+                    >
+                      <MapMarker
+                        position={{
+                          lat: 37.4865108655489,
+                          lng: 126.720344219984,
+                        }}
+                      >
+                        <div className="px-3 py-1.5 text-sm font-bold text-bora-600 whitespace-nowrap">
+                          📍 이로움방문간호센터
+                        </div>
+                      </MapMarker>
+                    </Map>
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-bora-50 text-bora-400 text-sm">
+                      지도 불러오는 중...
+                    </div>
+                  )}
+                </div>
+              </FadeIn>
             </div>
           </FadeIn>
         </div>
