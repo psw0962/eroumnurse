@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://eroumnurse.com/sitemap.xml
+Sitemap: https://www.eroumnurse.co.kr/sitemap.xml
